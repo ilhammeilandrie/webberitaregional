@@ -1,0 +1,5 @@
+# ========== DEPENDENCY (COMPOSER) ==========
+/vendor/
+
+# ========== KONFIG LOKAL (JANGAN KE GITHUB) ==========
+config.local.php
