@@ -187,7 +187,33 @@ $activePage = 'kategori';
         .nav-links .nav-link.active::after {
             width: 100%;
         }
-        
+
+        /* category button (kept from main but adapted to purple theme) */
+        .category-btn {
+            padding: 12px 24px;
+            margin: 5px;
+            border-radius: 30px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: 2px solid rgba(255,255,255,0.08);
+            background: rgba(255,255,255,0.03);
+            color: #fff;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .category-btn:hover {
+            border-color: rgba(255,255,255,0.15);
+            color: #fff;
+            background: rgba(255,255,255,0.06);
+            transform: translateY(-2px);
+        }
+        .category-btn.active {
+            background: rgba(255,255,255,0.12);
+            color: #fff;
+            border-color: transparent;
+            box-shadow: 0 4px 12px rgba(58,1,116,0.3);
+        }
+
         .news-card {
             border-radius: 16px;
             overflow: hidden;
