@@ -134,6 +134,29 @@ $activePage = 'kategori';
             writing-mode: horizontal-tb;
             white-space: nowrap;
         }
+
+        /* Make header and titles use the same strong, condensed style as navbar */
+        .category-header h1,
+        .navbar-brand-text,
+        .card-title {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 800;
+            letter-spacing: 2px;
+            color: #ffffff;
+        }
+
+        .category-header h1 {
+            text-transform: uppercase;
+            font-size: 2.4rem;
+            margin: 0;
+        }
+
+        .card-title {
+            font-size: 1rem;
+            text-transform: none;
+            color: #1a1a1a;
+            letter-spacing: 0.6px;
+        }
         
         /* navbar-divider removed: no vertical image */
         
