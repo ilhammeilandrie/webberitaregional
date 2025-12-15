@@ -35,6 +35,7 @@ if (!$apiKey) {
 // ----------------------------
 $country   = "id"; // berita khusus Indonesia
 $category  = $_GET['category'] ?? 'business'; // kategori default
+$city      = $_GET['city'] ?? ''; // kota opsional
 $page      = $_GET['page'] ?? '';
 
 $newsList = [];
@@ -52,9 +53,21 @@ $categories = [
     'world'      => 'Dunia'
 ];
 
+// List 20 kota besar Indonesia
+$cities = [
+    "Jakarta","Surabaya","Bandung","Medan","Makassar","Semarang",
+    "Palembang","Tangerang","Depok","Bekasi","Bogor","Batam",
+    "Pontianak","Balikpapan","Samarinda","Denpasar","Malang",
+    "Padang","Pekanbaru","Banjarmasin"
+];
+
 // Jika ada API key, barulah kita panggil API
 if ($apiKey) {
     $url = "https://newsdata.io/api/1/news?apikey={$apiKey}&country=id&category={$category}";
+
+    if (!empty($city)) {
+        $url .= "&q=" . urlencode($city);
+    }
 
     if (!empty($page)) {
         $url .= "&page=" . urlencode($page);
@@ -89,101 +102,123 @@ $activePage = 'kategori';
 
     <style>
         body {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            background: linear-gradient(135deg, #3d1a4d 0%, #2d1b3d 100%);
             font-family: 'Poppins', sans-serif;
-            min-height: 100vh;
         }
-        .navbar-brand {
-            font-weight: 700;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+        
+        /* NAVBAR STYLING */
+        .navbar-wrapper {
+            background: linear-gradient(135deg, #2e0854 0%, #4a148c 50%, #3d0066 100%);
+            padding: 20px 0;
+            box-shadow: 0 8px 25px rgba(58, 1, 116, 0.5);
         }
-        .nav-link.active {
+        
+        .navbar-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .navbar-brand-section {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            flex-shrink: 0;
+        }
+        
+        .navbar-brand-text {
+            font-size: 1.3rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            color: white;
+            writing-mode: horizontal-tb;
+            white-space: nowrap;
+        }
+        
+        .navbar-divider {
+            width: 2px;
+            height: 35px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 40px;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+        
+        .nav-links .nav-item {
+            position: relative;
+        }
+        
+        .nav-links .nav-link {
+            color: rgba(255, 255, 255, 0.7) !important;
             font-weight: 600;
-            color: #667eea !important;
-        }
-        .category-btn {
-            padding: 12px 24px;
-            margin: 5px;
-            border-radius: 30px;
-            font-weight: 600;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            border: 2px solid #e0e0e0;
-            background: white;
-            color: #333;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 5px 0;
             text-decoration: none;
-            display: inline-block;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
         }
-        .category-btn:hover {
-            border-color: #667eea;
-            color: white;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
-            transform: translateY(-2px);
+        
+        .nav-links .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #fff;
+            transition: width 0.3s ease;
         }
-        .category-btn.active {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border-color: transparent;
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        
+        .nav-links .nav-link:hover {
+            color: #ffffff !important;
         }
+        
+        .nav-links .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        .nav-links .nav-link.active {
+            color: #ffffff !important;
+        }
+        
+        .nav-links .nav-link.active::after {
+            width: 100%;
+        }
+        
         .news-card {
             border-radius: 16px;
             overflow: hidden;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            border: none;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(74, 20, 140, 0.2);
             background: white;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
         }
         .news-card:hover {
             transform: translateY(-8px);
-            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.25);
+            box-shadow: 0 12px 30px rgba(58, 1, 116, 0.3);
         }
         .news-img {
-            height: 200px;
+            height: 180px;
             object-fit: cover;
-            position: relative;
-        }
-        .news-img::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.1));
-        }
-        .card-body {
-            padding: 20px;
-        }
-        .card-title {
-            color: #1a1a2e;
-            line-height: 1.4;
-            margin-bottom: 12px;
-        }
-        .category-badge {
-            display: inline-block;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            margin-bottom: 12px;
         }
         .category-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%, #f093fb 100%);
+            background: linear-gradient(135deg, #2e0854 0%, #4a148c 50%, #3d0066 100%);
             color: white;
             padding: 50px 0;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
             border-radius: 0 0 20px 20px;
-            box-shadow: 0 10px 40px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 8px 25px rgba(58, 1, 116, 0.5);
             position: relative;
             overflow: hidden;
         }
+        
         .category-header::before {
             content: '';
             position: absolute;
@@ -191,10 +226,11 @@ $activePage = 'kategori';
             left: 0;
             right: 0;
             bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120"><path d="M0,50 Q300,0 600,50 T1200,50 L1200,120 L0,120 Z" fill="rgba(255,255,255,0.1)"/></svg>') no-repeat bottom;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120"><path d="M0,50 Q300,0 600,50 T1200,50 L1200,120 L0,120 Z" fill="rgba(255,255,255,0.05)"/></svg>') no-repeat bottom;
             background-size: cover;
             pointer-events: none;
         }
+        
         .category-header h1 {
             font-weight: 800;
             margin: 0;
@@ -202,30 +238,60 @@ $activePage = 'kategori';
             z-index: 1;
             font-size: 2.5rem;
         }
+        
         .category-header p {
             position: relative;
             z-index: 1;
-            opacity: 0.95;
         }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, #4a148c 0%, #3d0066 100%) !important;
+            border: none !important;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(58, 1, 116, 0.4);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(58, 1, 116, 0.5);
+        }
+        
         .btn-outline-primary {
-            border-color: #667eea;
-            color: #667eea;
-            transition: all 0.3s;
+            border-color: #4a148c !important;
+            color: #4a148c !important;
+            transition: all 0.3s ease;
         }
+        
         .btn-outline-primary:hover {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-color: transparent;
-            color: white;
+            background: linear-gradient(135deg, #4a148c 0%, #3d0066 100%) !important;
+            border-color: transparent !important;
+            color: white !important;
+            box-shadow: 0 4px 15px rgba(58, 1, 116, 0.4);
         }
-        .filter-card {
-            background: white;
-            border: none;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
-            border-radius: 16px;
+        
+        .card {
+            border-color: rgba(74, 20, 140, 0.2) !important;
+            background-color: rgba(255, 255, 255, 0.95);
         }
-        .text-muted-category {
-            color: #667eea;
+        
+        .form-select, .form-control {
+            border-color: #b39ddb !important;
+            background-color: rgba(255, 255, 255, 0.95);
+            transition: all 0.3s ease;
+        }
+        
+        .form-select:focus, .form-control:focus {
+            border-color: #4a148c !important;
+            box-shadow: 0 0 0 0.2rem rgba(74, 20, 140, 0.25) !important;
+        }
+        
+        .form-label {
+            color: #2d2d2d;
             font-weight: 600;
+        }
+        
+        .text-muted {
+            color: #555 !important;
         }
     </style>
 </head>
@@ -233,54 +299,86 @@ $activePage = 'kategori';
 <body>
 
 <!-- NAVBAR SEDERHANA (SELALU TAMPIL) -->
-<nav class="navbar bg-white shadow-sm mb-4">
-    <div class="container d-flex align-items-center">
-        <a class="navbar-brand text-primary" href="index.php">
-            <strong>Berita Regional Indonesia</strong>
-        </a>
+<div class="navbar-wrapper">
+    <div class="container">
+        <div class="navbar-container">
+            <div class="navbar-brand-section">
+                <div class="navbar-brand-text">BERITA REGIONAL INDONESIA</div>
+                <div class="navbar-divider"></div>
+            </div>
 
-        <ul class="nav ms-auto">
-            <li class="nav-item">
-                <a class="nav-link <?= $activePage === 'home' ? 'active' : '' ?>" href="index.php">
-                    Home
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link <?= $activePage === 'kategori' ? 'active' : '' ?>" href="kategori.php">
-                    Kategori
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link <?= $activePage === 'about' ? 'active' : '' ?>" href="about.php">
-                    About
-                </a>
-            </li>
-        </ul>
+            <ul class="nav-links">
+                <li class="nav-item">
+                    <a class="nav-link <?= $activePage === 'home' ? 'active' : '' ?>" href="index.php">
+                        HOME
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link <?= $activePage === 'kategori' ? 'active' : '' ?>" href="kategori.php">
+                        KATEGORI
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link <?= $activePage === 'about' ? 'active' : '' ?>" href="about.php">
+                        TENTANG
+                    </a>
+                </li>
+            </ul>
+        </div>
     </div>
-</nav>
+</div>
 
 <!-- HEADER KATEGORI -->
-<div class="category-header">
+<div class="category-header" style="margin-top: 30px;">
     <div class="container">
         <h1><?= htmlspecialchars($categories[$category] ?? $category) ?></h1>
-        <p class="lead mb-0">Berita terkini dari kategori <?= htmlspecialchars($categories[$category] ?? $category) ?> di Indonesia</p>
+        <p class="lead mb-0">
+            Berita terkini dari kategori <?= htmlspecialchars($categories[$category] ?? $category) ?>
+            <?php if (!empty($city)): ?>
+                di <?= htmlspecialchars($city) ?>
+            <?php else: ?>
+                di Indonesia
+            <?php endif; ?>
+        </p>
     </div>
 </div>
 
 <div class="container">
 
     <!-- FILTER KATEGORI -->
-    <div class="filter-card mb-4">
+    <div class="card shadow-sm mb-4">
         <div class="card-body">
-            <p class="text-muted-category mb-3">🔖 PILIH KATEGORI</p>
-            <div class="text-center">
-                <?php foreach ($categories as $slug => $name): ?>
-                    <a href="?category=<?= urlencode($slug) ?>" 
-                       class="category-btn <?= $category === $slug ? 'active' : '' ?>">
-                        <?= htmlspecialchars($name) ?>
-                    </a>
-                <?php endforeach; ?>
-            </div>
+            <p class="text-muted mb-3"><strong>Filter Berita:</strong></p>
+            <form method="GET" class="row g-3">
+
+                <div class="col-md-6">
+                    <label class="form-label">Pilih Kategori</label>
+                    <select name="category" class="form-select">
+                        <?php foreach ($categories as $slug => $name): ?>
+                            <option value="<?= urlencode($slug) ?>" <?= $category === $slug ? 'selected' : '' ?>>
+                                <?= htmlspecialchars($name) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">Pilih Kota</label>
+                    <select name="city" class="form-select">
+                        <option value="">Semua Kota</option>
+                        <?php foreach ($cities as $c): ?>
+                            <option value="<?= htmlspecialchars($c) ?>" <?= $city == $c ? 'selected' : '' ?>>
+                                <?= htmlspecialchars($c) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+
+                <div class="col-md-2 d-flex align-items-end">
+                    <button class="btn btn-primary w-100">Tampilkan</button>
+                </div>
+
+            </form>
         </div>
     </div>
 
@@ -309,19 +407,15 @@ $activePage = 'kategori';
                     <?php endif; ?>
 
                     <div class="card-body d-flex flex-column">
-                        <span class="category-badge">
-                            <?= htmlspecialchars($categories[$category] ?? $category) ?>
-                        </span>
-                        
                         <h6 class="card-title">
                             <?= htmlspecialchars($news['title'] ?? '') ?>
                         </h6>
 
-                        <p class="text-muted small mb-2">
+                        <p class="text-muted small">
                             <?= isset($news['pubDate']) ? date("d M Y H:i", strtotime($news['pubDate'])) : '' ?>
                         </p>
 
-                        <p class="card-text flex-grow-1">
+                        <p class="card-text">
                             <?= htmlspecialchars(substr($news['description'] ?? '', 0, 120)) ?>...
                         </p>
 
@@ -340,7 +434,7 @@ $activePage = 'kategori';
     <!-- PAGINATION -->
     <?php if ($nextPage): ?>
         <div class="text-center mt-4">
-            <a href="?category=<?= urlencode($category) ?>&page=<?= urlencode($nextPage) ?>"
+            <a href="?category=<?= urlencode($category) ?>&city=<?= urlencode($city) ?>&page=<?= urlencode($nextPage) ?>"
                class="btn btn-primary btn-lg">
                 Load More ⬇
             </a>
@@ -349,9 +443,8 @@ $activePage = 'kategori';
 
 </div>
 
-<div class="text-center mt-5 mb-5 text-muted">
-    <p>Regional News Indonesia © <?= date("Y") ?></p>
-    <small>Powered by NewsData.io API</small>
+<div class="text-center mt-4 mb-4 text-muted">
+    Regional News Indonesia © <?= date("Y") ?>
 </div>
 
 </body>
