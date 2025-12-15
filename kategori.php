@@ -135,12 +135,7 @@ $activePage = 'kategori';
             white-space: nowrap;
         }
         
-        .navbar-divider {
-            width: 2px;
-            height: 35px;
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 10px;
-        }
+        /* navbar-divider removed: no vertical image */
         
         .nav-links {
             display: flex;
@@ -219,17 +214,7 @@ $activePage = 'kategori';
             overflow: hidden;
         }
         
-        .category-header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120"><path d="M0,50 Q300,0 600,50 T1200,50 L1200,120 L0,120 Z" fill="rgba(255,255,255,0.05)"/></svg>') no-repeat bottom;
-            background-size: cover;
-            pointer-events: none;
-        }
+        /* decorative header background removed */
         
         .category-header h1 {
             font-weight: 800;
@@ -304,7 +289,6 @@ $activePage = 'kategori';
         <div class="navbar-container">
             <div class="navbar-brand-section">
                 <div class="navbar-brand-text">BERITA REGIONAL INDONESIA</div>
-                <div class="navbar-divider"></div>
             </div>
 
             <ul class="nav-links">
