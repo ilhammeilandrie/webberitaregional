@@ -102,15 +102,15 @@ $activePage = 'kategori';
 
     <style>
         body {
-            background: linear-gradient(135deg, #3d1a4d 0%, #2d1b3d 100%);
+            background: linear-gradient(135deg, #3a0f0f 0%, #2b0b0b 100%);
             font-family: 'Poppins', sans-serif;
         }
         
         /* NAVBAR STYLING */
         .navbar-wrapper {
-            background: linear-gradient(135deg, #2e0854 0%, #4a148c 50%, #3d0066 100%);
+            background: linear-gradient(135deg, #4a0b0b 0%, #7a0d0d 50%, #5b0000 100%);
             padding: 20px 0;
-            box-shadow: 0 8px 25px rgba(58, 1, 116, 0.5);
+            box-shadow: 0 8px 25px rgba(123, 0, 0, 0.45);
         }
         
         .navbar-container {
@@ -241,24 +241,24 @@ $activePage = 'kategori';
             border-radius: 16px;
             overflow: hidden;
             transition: all 0.3s ease;
-            border: 1px solid rgba(74, 20, 140, 0.2);
+            border: 1px solid rgba(123, 20, 20, 0.18);
             background: white;
         }
         .news-card:hover {
             transform: translateY(-8px);
-            box-shadow: 0 12px 30px rgba(58, 1, 116, 0.3);
+            box-shadow: 0 12px 30px rgba(123, 0, 0, 0.32);
         }
         .news-img {
             height: 180px;
             object-fit: cover;
         }
         .category-header {
-            background: linear-gradient(135deg, #2e0854 0%, #4a148c 50%, #3d0066 100%);
+            background: linear-gradient(135deg, #4a0b0b 0%, #7a0d0d 50%, #5b0000 100%);
             color: white;
             padding: 50px 0;
             margin-bottom: 30px;
             border-radius: 0 0 20px 20px;
-            box-shadow: 0 8px 25px rgba(58, 1, 116, 0.5);
+            box-shadow: 0 8px 25px rgba(123, 0, 0, 0.45);
             position: relative;
             overflow: hidden;
         }
@@ -279,44 +279,44 @@ $activePage = 'kategori';
         }
         
         .btn-primary {
-            background: linear-gradient(135deg, #4a148c 0%, #3d0066 100%) !important;
+            background: linear-gradient(135deg, #7a0d0d 0%, #5b0000 100%) !important;
             border: none !important;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(58, 1, 116, 0.4);
+            box-shadow: 0 4px 15px rgba(123, 0, 0, 0.38);
         }
-        
+
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(58, 1, 116, 0.5);
+            box-shadow: 0 6px 20px rgba(123, 0, 0, 0.48);
         }
         
         .btn-outline-primary {
-            border-color: #4a148c !important;
-            color: #4a148c !important;
+            border-color: #7a0d0d !important;
+            color: #7a0d0d !important;
             transition: all 0.3s ease;
         }
-        
+
         .btn-outline-primary:hover {
-            background: linear-gradient(135deg, #4a148c 0%, #3d0066 100%) !important;
+            background: linear-gradient(135deg, #7a0d0d 0%, #5b0000 100%) !important;
             border-color: transparent !important;
             color: white !important;
-            box-shadow: 0 4px 15px rgba(58, 1, 116, 0.4);
+            box-shadow: 0 4px 15px rgba(123, 0, 0, 0.38);
         }
         
         .card {
-            border-color: rgba(74, 20, 140, 0.2) !important;
+            border-color: rgba(123, 20, 20, 0.12) !important;
             background-color: rgba(255, 255, 255, 0.95);
         }
         
         .form-select, .form-control {
-            border-color: #b39ddb !important;
+            border-color: #b36b6b !important;
             background-color: rgba(255, 255, 255, 0.95);
             transition: all 0.3s ease;
         }
-        
+
         .form-select:focus, .form-control:focus {
-            border-color: #4a148c !important;
-            box-shadow: 0 0 0 0.2rem rgba(74, 20, 140, 0.25) !important;
+            border-color: #7a0d0d !important;
+            box-shadow: 0 0 0 0.2rem rgba(123, 20, 20, 0.25) !important;
         }
         
         .form-label {
