@@ -111,12 +111,14 @@ $activePage = 'kategori';
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
             transform: translateY(-2px);
+
         }
         .category-btn.active {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border-color: transparent;
             box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+
         }
         .news-card {
             border-radius: 16px;
