@@ -35,6 +35,7 @@ if (!$apiKey) {
 // ----------------------------
 $country   = "id"; // berita khusus Indonesia
 $category  = $_GET['category'] ?? 'business'; // kategori default
+$city      = $_GET['city'] ?? ''; // kota opsional
 $page      = $_GET['page'] ?? '';
 
 $newsList = [];
@@ -52,23 +53,41 @@ $categories = [
     'world'      => 'Dunia'
 ];
 
+// List 20 kota besar Indonesia
+$cities = [
+    "Jakarta", "Surabaya", "Bandung", "Medan", "Makassar", "Semarang",
+    "Palembang", "Tangerang", "Depok", "Bekasi", "Bogor", "Batam",
+    "Pontianak", "Balikpapan", "Samarinda", "Denpasar", "Malang",
+    "Padang", "Pekanbaru", "Banjarmasin"
+];
+
 // Jika ada API key, barulah kita panggil API
 if ($apiKey) {
     $url = "https://newsdata.io/api/1/news?apikey={$apiKey}&country=id&category={$category}";
+
+    if (!empty($city)) {
+        $url .= "&q=" . urlencode($city);
+    }
 
     if (!empty($page)) {
         $url .= "&page=" . urlencode($page);
     }
 
+    // Enable error reporting untuk debugging
+    ini_set('display_errors', 1);
+    error_reporting(E_ALL);
+
     $response = @file_get_contents($url);
 
     if ($response === false) {
-        $errorMessage = "Gagal mengambil data dari API NewsData.io.";
+        $errorMessage = "Gagal mengambil data dari API NewsData.io. Pastikan koneksi internet stabil dan API key valid.";
     } else {
         $data = json_decode($response, true);
 
         if (!is_array($data)) {
-            $errorMessage = "Response API bukan JSON valid.";
+            $errorMessage = "Response API bukan JSON valid. Error: " . json_last_error_msg();
+        } else if (isset($data['status']) && $data['status'] === 'error') {
+            $errorMessage = "API Error: " . ($data['message'] ?? 'Unknown error');
         } else {
             $newsList = $data['results'] ?? [];
             $nextPage = $data['nextPage'] ?? null;
@@ -89,74 +108,69 @@ $activePage = 'kategori';
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
     <style>
-        body { background: #f0f2f5; font-family: 'Poppins', sans-serif; }
-        .navbar-brand { font-weight: 700; }
-        .nav-link.active { font-weight: 600; color: #0d47a1 !important; }
+        body { 
+            background: #f5f5f5; 
+            font-family: 'Poppins', sans-serif; 
+        }
+        .navbar-brand { 
+            font-weight: 700; 
+        }
+        .nav-link.active { 
+            font-weight: 600; 
+            color: #0d47a1 !important; 
+        }
         .category-btn {
             padding: 12px 24px;
             margin: 5px;
             border-radius: 30px;
             font-weight: 600;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.3s ease;
             border: 2px solid #e0e0e0;
             background: white;
             color: #333;
             text-decoration: none;
             display: inline-block;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         }
         .category-btn:hover {
-            border-color: #667eea;
-            color: white;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+            border-color: #1976d2;
+            color: #1976d2;
+            background: #f0f7ff;
             transform: translateY(-2px);
-
         }
         .category-btn.active {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #1976d2;
             color: white;
-            border-color: transparent;
-            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
-
+            border-color: #1976d2;
+            box-shadow: 0 4px 12px rgba(25, 118, 210, 0.3);
         }
         .news-card {
-            border-radius: 16px;
+            border-radius: 12px;
             overflow: hidden;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: all 0.3s ease;
             border: none;
             background: white;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         }
         .news-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.25);
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
         }
         .news-img {
             height: 200px;
             object-fit: cover;
-            position: relative;
-        }
-        .news-img::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.1));
         }
         .card-body {
             padding: 20px;
         }
         .card-title {
-            color: #1a1a2e;
+            color: #1a1a1a;
             line-height: 1.4;
             margin-bottom: 12px;
         }
         .category-badge {
             display: inline-block;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #1976d2;
             color: white;
             padding: 4px 12px;
             border-radius: 20px;
@@ -165,25 +179,14 @@ $activePage = 'kategori';
             margin-bottom: 12px;
         }
         .category-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%, #f093fb 100%);
+            background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
             color: white;
             padding: 50px 0;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
             border-radius: 0 0 20px 20px;
-            box-shadow: 0 10px 40px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 8px 24px rgba(25, 118, 210, 0.25);
             position: relative;
             overflow: hidden;
-        }
-        .category-header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120"><path d="M0,50 Q300,0 600,50 T1200,50 L1200,120 L0,120 Z" fill="rgba(255,255,255,0.1)"/></svg>') no-repeat bottom;
-            background-size: cover;
-            pointer-events: none;
         }
         .category-header h1 {
             font-weight: 800;
@@ -197,24 +200,45 @@ $activePage = 'kategori';
             z-index: 1;
             opacity: 0.95;
         }
-        .btn-outline-primary {
-            border-color: #667eea;
-            color: #667eea;
-            transition: all 0.3s;
-        }
-        .btn-outline-primary:hover {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-color: transparent;
-            color: white;
-        }
         .filter-card {
             background: white;
             border: none;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
-            border-radius: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border-radius: 12px;
         }
         .text-muted-category {
-            color: #667eea;
+            color: #1976d2;
+            font-weight: 600;
+        }
+        .btn-primary {
+            background: #1976d2 !important;
+            border: none !important;
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            background: #1565c0 !important;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(25, 118, 210, 0.3);
+        }
+        .btn-outline-primary {
+            border-color: #1976d2 !important;
+            color: #1976d2 !important;
+        }
+        .btn-outline-primary:hover {
+            background: #1976d2 !important;
+            border-color: transparent !important;
+            color: white !important;
+        }
+        .form-select, .form-control {
+            border-color: #ddd !important;
+            transition: all 0.3s ease;
+        }
+        .form-select:focus, .form-control:focus {
+            border-color: #1976d2 !important;
+            box-shadow: 0 0 0 0.2rem rgba(25, 118, 210, 0.15) !important;
+        }
+        .form-label {
+            color: #333;
             font-weight: 600;
         }
     </style>
@@ -253,30 +277,70 @@ $activePage = 'kategori';
 <div class="category-header">
     <div class="container">
         <h1><?= htmlspecialchars($categories[$category] ?? $category) ?></h1>
-        <p class="lead mb-0">Berita terkini dari kategori <?= htmlspecialchars($categories[$category] ?? $category) ?> di Indonesia</p>
+        <p class="lead mb-0">
+            Berita terkini dari kategori <?= htmlspecialchars($categories[$category] ?? $category) ?>
+            <?php if (!empty($city)): ?>
+                di <?= htmlspecialchars($city) ?>
+            <?php else: ?>
+                di Indonesia
+            <?php endif; ?>
+        </p>
     </div>
 </div>
 
 <div class="container">
 
-    <!-- FILTER KATEGORI -->
+    <!-- FILTER KATEGORI & KOTA -->
     <div class="filter-card mb-4">
         <div class="card-body">
-            <p class="text-muted-category mb-3">🔖 PILIH KATEGORI</p>
-            <div class="text-center">
-                <?php foreach ($categories as $slug => $name): ?>
-                    <a href="?category=<?= urlencode($slug) ?>" 
-                       class="category-btn <?= $category === $slug ? 'active' : '' ?>">
-                        <?= htmlspecialchars($name) ?>
-                    </a>
-                <?php endforeach; ?>
-            </div>
+            <p class="text-muted-category mb-3">🔖 PILIH KATEGORI & KOTA BESAR</p>
+            <form method="GET" class="row g-3">
+                <div class="col-md-5">
+                    <label class="form-label">Pilih Kategori</label>
+                    <select name="category" class="form-select">
+                        <?php foreach ($categories as $slug => $name): ?>
+                            <option value="<?= urlencode($slug) ?>" <?= $category === $slug ? 'selected' : '' ?>>
+                                <?= htmlspecialchars($name) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+
+                <div class="col-md-5">
+                    <label class="form-label">Pilih Kota Besar</label>
+                    <select name="city" class="form-select">
+                        <option value="">Semua Kota</option>
+                        <?php foreach ($cities as $c): ?>
+                            <option value="<?= htmlspecialchars($c) ?>" <?= $city === $c ? 'selected' : '' ?>>
+                                <?= htmlspecialchars($c) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+
+                <div class="col-md-2 d-flex align-items-end">
+                    <button class="btn btn-primary w-100">Tampilkan</button>
+                </div>
+            </form>
         </div>
     </div>
 
     <?php if ($errorMessage): ?>
         <div class="alert alert-danger text-center">
             <?= $errorMessage ?>
+        </div>
+    <?php endif; ?>
+
+    <?php if (!$apiKey): ?>
+        <div class="alert alert-warning text-center">
+            <strong>⚠️ API Key tidak ditemukan!</strong><br>
+            Pastikan file <code>config.local.php</code> ada di folder root dan berisi:
+            <pre style="background:#f5f5f5; padding:10px; margin-top:10px; border-radius:5px;">
+&lt;?php
+return [
+    'NEWS_API_KEY' => 'your_api_key_here',
+];
+            </pre>
         </div>
     <?php endif; ?>
 
@@ -330,7 +394,7 @@ $activePage = 'kategori';
     <!-- PAGINATION -->
     <?php if ($nextPage): ?>
         <div class="text-center mt-4">
-            <a href="?category=<?= urlencode($category) ?>&page=<?= urlencode($nextPage) ?>"
+            <a href="?category=<?= urlencode($category) ?>&city=<?= urlencode($city) ?>&page=<?= urlencode($nextPage) ?>"
                class="btn btn-primary btn-lg">
                 Load More ⬇
             </a>
