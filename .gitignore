@@ -3,3 +3,4 @@
 
 # ========== KONFIG LOKAL (JANGAN KE GITHUB) ==========
 config.local.php
+.phpunit.result.cache
