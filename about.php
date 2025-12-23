@@ -74,8 +74,11 @@
 					<div class="section-title mb-2">Apa itu WebBeritaRegional?</div>
 					<p class="mb-0">
 						WebBeritaRegional adalah portal berita yang mengkurasi kabar lokal dan regional di Indonesia
-						berdasarkan kota dan kategori. Tujuannya memberi ringkasan cepat sehingga pembaca langsung
-						mendapat inti informasi tanpa harus membuka banyak tab.
+					berdasarkan kota dan kategori. Situs ini menyajikan ringkasan berita agar pembaca dapat
+					menangkap inti informasi dengan cepat tanpa harus membuka banyak sumber.
+				</p>
+				<p class="mb-0 mt-2">
+					Situs ini dibuat sebagai tugas besar mata kuliah Pengujian Perangkat Lunak oleh: 1. Ilham Meilandrie Richardo (2313030124); 2. Kevin Satrio C (2313030062); dan 3. Shendi Rahmadhani N. S (2313030078).
 					</p>
 				</div>
 			</div>
@@ -148,10 +151,11 @@
 		<div class="card-body">
 			<div class="section-title mb-3">Cara menggunakan</div>
 			<ol class="step-list list-unstyled mb-0">
-				<li>Masuk ke beranda lalu pilih kota yang ingin dipantau.</li>
-				<li>Klik kartu berita untuk membaca ringkasan singkat.</li>
-				<li>Gunakan tautan “Baca selengkapnya” untuk membuka artikel asli.</li>
-				<li>Ingin berganti kota atau kategori? Gunakan navigasi di bagian atas.</li>
+				<li>Masuk ke beranda lalu cek bagian <strong>Berita Terkini di Indonesia</strong> untuk melihat kabar terbaru.</li>
+				<li>Klik judul atau kartu berita untuk membaca ringkasan, atau pilih "Baca selengkapnya" untuk menuju artikel asli.</li>
+				<li>Klik <strong>Jelajahi Berita Lainnya</strong> untuk membuka halaman kategori.</li>
+				<li>Setelah memilih kota dan kategori yang Anda minati, pilih salah satu berita.</li>
+				<li>Klik judul atau tombol "Baca selengkapnya" untuk membuka artikel asli jika ingin membaca keseluruhan.</li>
 			</ol>
 		</div>
 	</div>
